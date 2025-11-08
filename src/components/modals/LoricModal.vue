@@ -1,8 +1,8 @@
 <template>
-  <Modal v-if="modals.fabled && fabled.length" @close="toggleModal('fabled')">
-    <h3>Choose a fabled character to add to the game:</h3>
+  <Modal v-if="modals.loric && fabled.length" @close="toggleModal('loric')">
+    <h3>Choose a loric character to add to the game:</h3>
     <ul class="tokens">
-      <li v-for="role in fabled" :key="role.id" @click="setFabled(role)">
+      <li v-for="role in fabled" :key="role.id" @click="setLoric(role)">
         <Token :role="role" />
       </li>
     </ul>
@@ -30,16 +30,15 @@ export default {
           fabled.push(role);
         }
       });
-      // filter our lorics
-      return fabled.filter(fabled => fabled.team === 'fabled');
+      return fabled.filter(fabled => fabled.team === 'loric');
     },
   },
   methods: {
-    setFabled(role) {
+    setLoric(role) {
       this.$store.commit("players/setFabled", {
         fabled: role,
       });
-      this.$store.commit("toggleModal", "fabled");
+      this.$store.commit("toggleModal", "loric");
     },
     ...mapMutations(["toggleModal"]),
   },
