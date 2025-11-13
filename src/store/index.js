@@ -5,10 +5,10 @@ import socket from "./socket";
 import players from "./modules/players";
 import session from "./modules/session";
 import editionJSON from "../editions.json";
-import rolesJSON from "../roles.json";
+import rolesJSON from "../characters.json";
 import nightJSON from "../nightsheet.json";
-import fabledJSON from "../fabled.json";
-import jinxesJSON from "../hatred.json";
+import npcJSON from "../non_player_characters.json";
+import jinxesJSON from "../jinxes.json";
 
 Vue.use(Vuex);
 
@@ -76,7 +76,13 @@ const editionJSONbyId = new Map(
   editionJSON.map((edition) => [edition.id, edition]),
 );
 const rolesJSONbyId = new Map(rolesFormatted.map((role) => [role.id, role]));
-const fabled = new Map(fabledJSON.map((role) => [role.id, role]));
+const npcs = new Map(
+  npcJSON.map((role) => {
+    role.firstNight = getFirstNightOrder(role.id);
+    role.otherNight = getOtherNightOrder(role.id);
+    return [role.id, role];
+  }),
+);
 
 // jinxes
 let jinxes = {};
@@ -128,16 +134,16 @@ export default new Vuex.Store({
       isStatic: false,
       isMuted: false,
       isImageOptIn: false,
+      isMockAssignmentsAllowed: false,
       zoom: 0,
       background: "",
-
       nightNumber: 0,
       nightStart: null,
       nightEnd: null,
     },
     modals: {
       edition: false,
-      fabled: false,
+      npc: false,
       gameState: false,
       messages: false,
       nightOrder: false,
@@ -150,7 +156,7 @@ export default new Vuex.Store({
     edition: editionJSONbyId.get("tb"),
     roles: getRolesByEdition(),
     otherTravellers: getTravellersNotInEdition(),
-    fabled,
+    npcs,
     jinxes,
   },
   getters: {
@@ -195,6 +201,7 @@ export default new Vuex.Store({
     toggleMenu: toggle("isMenuOpen"),
     toggleNightOrder: toggle("isNightOrder"),
     toggleStatic: toggle("isStatic"),
+    toggleMockAssignments: toggle("isMockAssignmentsAllowed"),
     toggleNight({ grimoire, players, edition, session }, val) {
       // Reset the hasResponded var for the next night.
       players.players.map((player) => {
@@ -300,7 +307,8 @@ export default new Vuex.Store({
               minion: "minion",
               demon: "demon",
               fabled: "fabled",
-            }[role.team] || "custom";
+              loric: "loric",
+            }[role.team] || "traveller";
           role.firstNight = Math.abs(role.firstNight);
           role.otherNight = Math.abs(role.otherNight);
           if (role.jinxes) {
@@ -314,18 +322,18 @@ export default new Vuex.Store({
         .filter((role) => role.name && role.ability && role.team)
         // sort by team
         .sort((a, b) => b.team.localeCompare(a.team));
-      // convert to Map without Fabled
+      // convert to Map without NPCs
       state.roles = new Map(
         processedRoles
-          .filter((role) => role.team !== "fabled")
+          .filter((role) => role.team !== "fabled" && role.team !== "loric")
           .map((role) => [role.id, role]),
       );
-      // update Fabled to include custom Fabled from this script
-      state.fabled = new Map([
+      // update NPCS to include custom NPCs from this script
+      state.npcs = new Map([
         ...processedRoles
-          .filter((r) => r.team === "fabled")
+          .filter((r) => r.team === "fabled" || r.team === "loric")
           .map((r) => [r.id, r]),
-        ...fabledJSON.map((role) => [role.id, role]),
+        ...npcJSON.map((role) => [role.id, role]),
       ]);
       // update extraTravellers map to only show travellers not in this script
       state.otherTravellers = new Map(

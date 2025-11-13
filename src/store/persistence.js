@@ -14,6 +14,9 @@ module.exports = (store) => {
   if (localStorage.getItem("static")) {
     store.commit("toggleStatic", true);
   }
+  if (localStorage.getItem("mockAssignments")) {
+    store.commit("toggleMockAssignments", true);
+  }
   if (localStorage.getItem("imageOptIn")) {
     store.commit("toggleImageOptIn", true);
   }
@@ -40,10 +43,10 @@ module.exports = (store) => {
       });
     });
   }
-  if (localStorage.fabled !== undefined) {
-    store.commit("players/setFabled", {
-      fabled: JSON.parse(localStorage.fabled).map(
-        (fabled) => store.state.fabled.get(fabled.id) || fabled,
+  if (localStorage.npcs !== undefined) {
+    store.commit("players/setNpcs", {
+      npcs: JSON.parse(localStorage.npcs).map(
+        (npc) => store.state.npcs.get(npc.id) || npc,
       ),
     });
   }
@@ -107,6 +110,13 @@ module.exports = (store) => {
           localStorage.removeItem("static");
         }
         break;
+      case "toggleMockAssignments":
+        if (state.grimoire.isMockAssignmentsAllowed) {
+          localStorage.setItem("mockAssignments", 1);
+        } else {
+          localStorage.removeItem("mockAssignments");
+        }
+        break;
       case "toggleImageOptIn":
         if (state.grimoire.isImageOptIn) {
           localStorage.setItem("imageOptIn", 1);
@@ -140,12 +150,12 @@ module.exports = (store) => {
           JSON.stringify(state.players.bluffs.map(({ id }) => id)),
         );
         break;
-      case "players/setFabled":
+      case "players/setNpcs":
         localStorage.setItem(
-          "fabled",
+          "npcs",
           JSON.stringify(
-            state.players.fabled.map((fabled) =>
-              fabled.isCustom ? fabled : { id: fabled.id },
+            state.players.npcs.map((npc) =>
+              npc.isCustom ? npc : { id: npc.id },
             ),
           ),
         );
