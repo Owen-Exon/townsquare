@@ -1,5 +1,9 @@
 # Release Notes
 
+### Version 2.21.2
+- Added Zenomancer
+- Added sound effect when roles are sent/received
+
 ### Version 2.21.1
 - Fixed custom reminders
 - Changed custom reminders to use the default fabled icon instead

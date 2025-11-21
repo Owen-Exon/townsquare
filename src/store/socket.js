@@ -11,6 +11,7 @@ class LiveSession {
     this._reconnectTimer = null;
     this._players = {}; // map of players connected to a session
     this._pings = {}; // map of player IDs to ping
+    this._notify = new Audio(require("@/assets/sounds/roles-notify.mp3"));
     // reconnect to previous session
     if (this._store.state.session.sessionId) {
       this.connect(this._store.state.session.sessionId);
@@ -580,6 +581,15 @@ class LiveSession {
           property: "role",
           value: role,
         });
+        if (
+          this._store.state.session.playerId === player.id &&
+          role.team !== "traveller"
+        ) {
+          this._notify.currentTime = 0;
+          this._notify.play().catch((err) => {
+            console.warn("Audio play prevented by browser policy - ", err);
+          });
+        }
       }
     } else {
       // just update the player otherwise
