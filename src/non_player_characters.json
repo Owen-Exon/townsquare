@@ -210,5 +210,19 @@
     "reminders": [],
     "setup": true,
     "ability": "Players don't know their character or alignment. They learn them when they die."
+  },
+  {
+    "id": "zenomancer",
+    "name": "Zenomancer",
+    "team": "loric",
+    "firstNightReminder": "",
+    "otherNightReminder": "",
+    "reminders": [
+      "Goal",
+      "Goal",
+      "Goal"
+    ],
+    "setup": false,
+    "ability": "One or more players each have a goal. When achieved, that player learns a piece of true info."
   }
 ]

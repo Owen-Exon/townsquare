@@ -124,7 +124,9 @@
           </template>
           <template v-else>
             <li v-if="session.ping">
-              Delay to {{ session.isSpectator ? "Host" : "Players" }}
+              <small>
+                Delay to {{ session.isSpectator ? "Host" : "Players" }}
+              </small>
               <em>{{ session.ping }}ms</em>
             </li>
             <li @click="copySessionUrl">
