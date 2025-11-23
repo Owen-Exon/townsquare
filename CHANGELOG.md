@@ -1,8 +1,11 @@
 # Release Notes
 
+### Version 2.21.3
+- Fixed roles received sound effect not muting when sound effects were muted
+
 ### Version 2.21.2
 - Added Zenomancer
-- Added sound effect when roles are sent/received
+- Added sound effect for players when roles are received
 
 ### Version 2.21.1
 - Fixed custom reminders
