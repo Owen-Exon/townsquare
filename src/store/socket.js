@@ -583,7 +583,8 @@ class LiveSession {
         });
         if (
           this._store.state.session.playerId === player.id &&
-          role.team !== "traveller"
+          role.team !== "traveller" &&
+          !this._store.state.grimoire.isMuted
         ) {
           this._notify.currentTime = 0;
           this._notify.play().catch((err) => {
