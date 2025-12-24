@@ -8,6 +8,10 @@
     "roles": [],
     "firstNight": [
       "dusk",
+      "angel",
+      "buddhist",
+      "toymaker",
+      "stormcatcher",
       "bureaucrat",
       "thief",
       "minioninfo",
@@ -25,6 +29,8 @@
     ],
     "otherNight": [
       "dusk",
+      "duchess",
+      "toymaker",
       "bureaucrat",
       "thief",
       "poisoner",
@@ -32,6 +38,7 @@
       "spy",
       "scarletwoman",
       "imp",
+      "tor",
       "ravenkeeper",
       "undertaker",
       "empath",
@@ -50,6 +57,10 @@
     "roles": [],
     "firstNight": [
       "dusk",
+      "angel",
+      "buddhist",
+      "toymaker",
+      "stormcatcher",
       "apprentice",
       "minioninfo",
       "lunatic",
@@ -65,6 +76,8 @@
     ],
     "otherNight": [
       "dusk",
+      "duchess",
+      "toymaker",
       "sailor",
       "innkeeper",
       "courtier",
@@ -83,6 +96,7 @@
       "tinker",
       "moonchild",
       "grandmother",
+      "tor",
       "chambermaid",
       "dawn"
     ],
@@ -97,6 +111,10 @@
     "roles": [],
     "firstNight": [
       "dusk",
+      "angel",
+      "buddhist",
+      "toymaker",
+      "stormcatcher",
       "barista",
       "minioninfo",
       "demoninfo",
@@ -113,6 +131,8 @@
     ],
     "otherNight": [
       "dusk",
+      "duchess",
+      "toymaker",
       "barista",
       "harlot",
       "bonecollector",
@@ -125,6 +145,7 @@
       "vigormortis",
       "nodashii",
       "vortox",
+      "tor",
       "barber",
       "sweetheart",
       "sage",

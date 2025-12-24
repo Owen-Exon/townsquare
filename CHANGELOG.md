@@ -1,5 +1,9 @@
 # Release Notes
 
+### Version 2.21.4
+- Added Hindu
+- Fixed Tor appearing at the top of the night order on base-3 scripts
+
 ### Version 2.21.3
 - Fixed roles received sound effect not muting when sound effects were muted
 
