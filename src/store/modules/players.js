@@ -9,6 +9,7 @@ const NEWPLAYER = {
   hasTwoVotes: false,
   hasResponded: {},
   isDead: false,
+  handRaised: false,
   pronouns: "",
 };
 

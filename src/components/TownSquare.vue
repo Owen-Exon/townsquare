@@ -343,6 +343,12 @@ export default {
             left: 100%;
           }
         }
+        .player .overlay svg.hand.fa-hand-paper {
+          transform: scaleX(-100%);
+        }
+        .player.hand-raised .overlay svg.hand.fa-hand-paper {
+          transform: scaleX(-100%) rotateZ(45deg) translateY(-35%);
+        }
         .fold-enter-active,
         .fold-leave-active {
           transform-origin: right center;

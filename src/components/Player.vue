@@ -9,6 +9,7 @@
           marked:
             (!session.isSpectator || session.isVoteWatchingAllowed) &&
             session.markedPlayer === index,
+          'hand-raised': player.handRaised,
           'no-vote': player.isVoteless,
           'two-votes': player.hasTwoVotes,
           you:
@@ -72,8 +73,39 @@
         @set-role="$emit('trigger', ['openRoleModal'])"
       />
 
+      <!-- Claimed seat icon -->
+      <font-awesome-icon
+        icon="chair"
+        v-if="player.id && session.sessionId"
+        class="seat"
+        :class="{
+          highlight: session.isRolesDistributed,
+          disconnected: !player.connected,
+        }"
+        :title="setSeatTitle()"
+      />
+
+      <!-- Ghost vote icon -->
+      <font-awesome-icon
+        icon="vote-yea"
+        class="has-vote"
+        v-if="player.isDead && !player.isVoteless"
+        @click="updatePlayer('isVoteless', true)"
+        title="Ghost vote"
+      />
+
+      <!-- Two votes icon -->
+      <font-awesome-icon
+        icon="sign-language"
+        class="two-votes"
+        v-if="player.hasTwoVotes"
+        @click="updatePlayer('hasTwoVotes', false)"
+        title="Has two votes"
+      />
+
       <!-- Overlay icons -->
       <div class="overlay">
+        <font-awesome-icon icon="hand-paper" class="hand" />
         <font-awesome-icon
           icon="hand-paper"
           class="vote first-vote"
@@ -117,36 +149,6 @@
         />
       </div>
 
-      <!-- Claimed seat icon -->
-      <font-awesome-icon
-        icon="chair"
-        v-if="player.id && session.sessionId"
-        class="seat"
-        :class="{
-          highlight: session.isRolesDistributed,
-          disconnected: !player.connected,
-        }"
-        :title="setSeatTitle()"
-      />
-
-      <!-- Ghost vote icon -->
-      <font-awesome-icon
-        icon="vote-yea"
-        class="has-vote"
-        v-if="player.isDead && !player.isVoteless"
-        @click="updatePlayer('isVoteless', true)"
-        title="Ghost vote"
-      />
-
-      <!-- Two votes icon -->
-      <font-awesome-icon
-        icon="sign-language"
-        class="two-votes"
-        v-if="player.hasTwoVotes"
-        @click="updatePlayer('hasTwoVotes', false)"
-        title="Has two votes"
-      />
-
       <!-- On block icon -->
       <div class="marked">
         <font-awesome-icon icon="skull" />
@@ -164,6 +166,17 @@
 
       <transition name="fold">
         <ul class="menu" v-if="isMenuOpen">
+          <li
+            @click="raiseHand"
+            v-if="
+              session.isSpectator &&
+              player.connected &&
+              player.id === session.playerId
+            "
+          >
+            <font-awesome-icon icon="hand-paper" />
+            Raise Hand
+          </li>
           <li @click="changeAlignment" v-if="player.role.id">
             <font-awesome-icon icon="yin-yang" />
             Change Alignment
@@ -336,6 +349,11 @@ export default {
     };
   },
   methods: {
+    raiseHand() {
+      if (this.session.isSpectator && this.player.id !== this.session.playerId)
+        return;
+      this.updatePlayer("handRaised", !this.player.handRaised, false);
+    },
     changeAlignment() {
       let newAlignment = this.player.alignmentIndex + 1;
       if (
@@ -392,6 +410,7 @@ export default {
       if (
         this.session.isSpectator &&
         property !== "reminders" &&
+        property !== "handRaised" &&
         property !== "pronouns" &&
         property !== "name" &&
         property !== "alignmentIndex"
@@ -657,6 +676,7 @@ export default {
   z-index: 2;
   cursor: pointer;
 
+  &.hand,
   &.swap,
   &.move,
   &.nominate,
@@ -680,10 +700,29 @@ export default {
       fill: url(#demon);
     }
 
+    &.hand.fa-hand-paper {
+      height: 55%;
+      transform: none;
+      transform-origin: center 175%;
+      transition: all 500ms;
+      & * {
+        fill: url(#default);
+      }
+    }
+
     &.fa-times * {
       fill: url(#townsfolk);
     }
   }
+}
+
+.player.hand-raised .overlay svg.hand.fa-hand-paper {
+  opacity: 1;
+  transform: rotateZ(45deg) translateY(-35%);
+}
+
+#townsquare.vote .player .overlay svg.hand.fa-hand-paper {
+  opacity: 0;
 }
 
 // other player voted yes, but is not locked yet

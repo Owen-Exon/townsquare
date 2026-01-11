@@ -215,6 +215,9 @@ class LiveSession {
       case "bye":
         this._handleBye(params);
         break;
+      case "handRaised":
+        this._updateHandRaised(params);
+        break;
       case "pronouns":
         this._updatePlayerPronouns(params);
         break;
@@ -321,6 +324,7 @@ class LiveSession {
       isDead: player.isDead,
       isVoteless: player.isVoteless,
       hasTwoVotes: player.hasTwoVotes,
+      handRaised: player.handRaised,
       pronouns: player.pronouns,
       ...(player.role && player.role.team === "traveller"
         ? { roleId: player.role.id }
@@ -397,6 +401,7 @@ class LiveSession {
         "isDead",
         "isVoteless",
         "hasTwoVotes",
+        "handRaised",
         "pronouns",
       ].forEach((property) => {
         const value = state[property];
@@ -599,6 +604,24 @@ class LiveSession {
   }
 
   /**
+   * Send a hand raised update
+   * @param player
+   * @param value
+   * @param isFromSockets
+   */
+  sendHandRaised({ player, value, isFromSockets }) {
+    //send hand raised only for the seated player or storyteller
+    //Do not re-send for an update that was recieved from the sockets layer
+    if (
+      isFromSockets ||
+      (this._isSpectator && this._store.state.session.playerId !== player.id)
+    )
+      return;
+    const index = this._store.state.players.players.indexOf(player);
+    this._send("handRaised", [index, value]);
+  }
+
+  /**
    * Publish a player pronouns update
    * @param player
    * @param value
@@ -632,6 +655,23 @@ class LiveSession {
       return;
     const index = this._store.state.players.players.indexOf(player);
     this._send("name", [index, value]);
+  }
+
+  /**
+   * Update raised hands based on incoming data.
+   * @param index
+   * @param value
+   * @private
+   */
+  _updateHandRaised([index, value]) {
+    const player = this._store.state.players.players[index];
+
+    this._store.commit("players/update", {
+      player,
+      property: "handRaised",
+      value,
+      isFromSockets: true,
+    });
   }
 
   /**
@@ -1138,7 +1178,9 @@ export default (store) => {
         session.sendGamestate("", true);
         break;
       case "players/update":
-        if (payload.property === "pronouns") {
+        if (payload.property === "handRaised") {
+          session.sendHandRaised(payload);
+        } else if (payload.property === "pronouns") {
           session.sendPlayerPronouns(payload);
         } else if (payload.property === "name") {
           session.sendPlayerName(payload);
