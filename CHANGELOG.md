@@ -1,5 +1,8 @@
 # Release Notes
 
+### Version 2.21.6
+- Added Pope
+
 ### Version 2.21.5
 - Added support for hand-raising (with explicit permission from TPI) using the space bar and from the player menu - the ST may force lower all player hands from the Players tab
 - Moved the "Allow Self-Naming" setting from the Session tab to the Players tab
