@@ -1,5 +1,9 @@
 # Release Notes
 
+### Version 2.21.7
+- Added Ventriloquist
+- Added small warning for STs on the voting screen to inform them if there are some unoccupied seats
+
 ### Version 2.21.6
 - Added Pope
 

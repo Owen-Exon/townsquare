@@ -232,6 +232,18 @@
     "ability": "Players don't know their character or alignment. They learn them when they die."
   },
   {
+    "id": "ventriloquist",
+    "name": "Ventriloquist",
+    "team": "loric",
+    "firstNightReminder": "",
+    "otherNightReminder": "",
+    "reminders": [
+      "Mad"
+    ],
+    "setup": false,
+    "ability": "If a player is mad as a fresh character during their nomination, they might not die if executed today."
+  },
+  {
     "id": "zenomancer",
     "name": "Zenomancer",
     "team": "loric",
