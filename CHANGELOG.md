@@ -1,5 +1,8 @@
 # Release Notes
 
+### Version 2.22.1
+- Made the Drunk, Marionette, and Lil' Monsta tokens able to be selected again, so that the randomiser may still "choose" these characters, but instead made the bag unable to be sent until these characters are deselected
+
 ### Version 2.22.0
 - Migrated to official character art as default (with explicit permission from TPI), with an option to still use the unofficial art if desired
 - Changed all night reminder texts to the official night reminder texts
