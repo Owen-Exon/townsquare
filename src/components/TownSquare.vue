@@ -68,9 +68,9 @@
             "
           >
             <em>{{ nightOrder.get(role).first }}</em>
-            <span v-if="role.firstNightReminder">{{
-              role.firstNightReminder
-            }}</span>
+            <span class="description" v-if="role.firstNightReminder">
+              <span v-html="formatNightReminder(role.firstNightReminder)" />
+            </span>
           </div>
           <div
             class="night-order other"
@@ -81,9 +81,9 @@
             "
           >
             <em>{{ nightOrder.get(role).other }}</em>
-            <span v-if="role.otherNightReminder">{{
-              role.otherNightReminder
-            }}</span>
+            <span class="description" v-if="role.otherNightReminder">
+              <span v-html="formatNightReminder(role.otherNightReminder)" />
+            </span>
           </div>
           <Token :role="role"></Token>
         </li>
@@ -126,6 +126,11 @@ export default {
     };
   },
   methods: {
+    formatNightReminder(text) {
+      return text
+        .replace(/\*(.*?)\*/g, "<b>$1</b>")
+        .replace(/:reminder:/g, '<i class="reminder-token"></i>');
+    },
     toggleBluffs() {
       this.isBluffsOpen = !this.isBluffsOpen;
     },
@@ -548,7 +553,7 @@ export default {
     opacity: 0;
   }
 
-  span {
+  .description {
     display: flex;
     position: absolute;
     padding: 5px 10px 5px 30px;
@@ -563,6 +568,18 @@ export default {
     align-items: center;
     opacity: 0;
     transition: opacity 200ms ease-in-out;
+
+    i.reminder-token {
+      display: inline-block;
+      vertical-align: middle;
+      height: 20px;
+      width: 20px;
+      border: 1px solid white;
+      border-radius: 50%;
+      top: -2px;
+      background: url("../assets/reminder.webp") no-repeat 50%;
+      background-size: 100%;
+    }
 
     &:before {
       transform: rotate(-90deg);
@@ -585,7 +602,7 @@ export default {
     }
   }
 
-  &.first span {
+  &.first .description {
     right: 120%;
     background: linear-gradient(
       to right,
@@ -602,7 +619,7 @@ export default {
     }
   }
 
-  &.other span {
+  &.other .description {
     left: 120%;
     background: linear-gradient(to right, $demon 0%, rgba(0, 0, 0, 0.5) 20%);
     &:before {
@@ -643,13 +660,13 @@ export default {
     background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, $demon 100%);
   }
 
-  em:hover + span {
+  em:hover + .description {
     opacity: 1;
   }
 
   // adjustment for npcs
   .npcs &.first {
-    span {
+    .description {
       right: auto;
       left: 40px;
       &:after {

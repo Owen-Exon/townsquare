@@ -86,6 +86,16 @@
             Background Image
             <em><font-awesome-icon icon="image" /></em>
           </li>
+          <li @click="toggleUnofficial">
+            <small>Use Unofficial Art</small>
+            <em
+              ><font-awesome-icon
+                :icon="[
+                  'fas',
+                  grimoire.isArtUnofficial ? 'check-square' : 'square',
+                ]"
+            /></em>
+          </li>
           <li v-if="!edition.isOfficial" @click="imageOptIn">
             <small>Show Custom Images</small>
             <em
@@ -457,6 +467,7 @@ export default {
     ...mapMutations([
       "toggleGrimoire",
       "toggleMenu",
+      "toggleUnofficial",
       "toggleImageOptIn",
       "toggleMuted",
       "toggleNightOrder",

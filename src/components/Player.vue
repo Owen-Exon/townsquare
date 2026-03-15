@@ -45,9 +45,9 @@
         "
       >
         <em>{{ nightOrder.get(player).first }}</em>
-        <span v-if="player.role.firstNightReminder">{{
-          player.role.firstNightReminder
-        }}</span>
+        <span class="description" v-if="player.role.firstNightReminder">
+          <span v-html="formatNightReminder(player.role.firstNightReminder)" />
+        </span>
       </div>
       <div
         class="night-order other"
@@ -58,9 +58,9 @@
         "
       >
         <em>{{ nightOrder.get(player).other }}</em>
-        <span v-if="player.role.otherNightReminder">{{
-          player.role.otherNightReminder
-        }}</span>
+        <span class="description" v-if="player.role.otherNightReminder">
+          <span v-html="formatNightReminder(player.role.otherNightReminder)" />
+        </span>
       </div>
 
       <Token
@@ -274,17 +274,16 @@
         <span
           class="icon"
           :style="{
-            backgroundImage: `url(${
-              reminder.image && grimoire.isImageOptIn
-                ? Array.isArray(reminder.image)
-                  ? reminder.image[0]
-                  : reminder.image
-                : require(
-                    '../assets/icons/' +
-                      (reminder.imageAlt || reminder.role) +
-                      '.webp',
-                  )
-            })`,
+            backgroundImage: `url(${getImage(
+              {
+                id: reminder.role,
+                team: reminder.team,
+                edition: reminder.edition,
+                image: reminder.image,
+                imageAlt: reminder.imageAlt,
+              },
+              0,
+            )})`,
           }"
         ></span>
         <span class="text">{{ reminder.name }}</span>
@@ -318,6 +317,7 @@ export default {
     ...mapState("players", ["players"]),
     ...mapState(["grimoire", "session"]),
     ...mapGetters({ nightOrder: "players/nightOrder" }),
+    ...mapGetters(["getImage"]),
     index: function () {
       return this.players.indexOf(this.player);
     },
@@ -349,6 +349,11 @@ export default {
     };
   },
   methods: {
+    formatNightReminder(text) {
+      return text
+        .replace(/\*(.*?)\*/g, "<b>$1</b>")
+        .replace(/:reminder:/g, '<i class="reminder-token"></i>');
+    },
     raiseHand() {
       if (this.session.isSpectator && this.player.id !== this.session.playerId)
         return;
@@ -1083,9 +1088,9 @@ li.move:not(.from) .player .overlay svg.move {
     position: absolute;
     top: 0;
     width: 90%;
-    height: 90%;
+    height: 80%;
     background-size: 100%;
-    background-position: center 0;
+    background-position: center center;
     background-repeat: no-repeat;
     background-image: url("../assets/plus.webp");
     transition: opacity 200ms;
@@ -1095,6 +1100,7 @@ li.move:not(.from) .player .overlay svg.move {
     background-image: url("../assets/x.webp");
     opacity: 0;
     top: 5%;
+    height: 90%;
   }
 
   &.add {
@@ -1107,6 +1113,7 @@ li.move:not(.from) .player .overlay svg.move {
 
     .icon {
       top: 5%;
+      height: 90%;
     }
   }
 

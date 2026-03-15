@@ -11,7 +11,9 @@
     :style="{
       backgroundImage: grimoire.background
         ? `url('${grimoire.background}')`
-        : '',
+        : edition.background && grimoire.isImageOptIn
+          ? `url('${edition.background}')`
+          : '',
     }"
   >
     <video
@@ -75,7 +77,7 @@ export default {
     Gradients,
   },
   computed: {
-    ...mapState(["grimoire", "session"]),
+    ...mapState(["edition", "grimoire", "session"]),
     ...mapState("players", ["players"]),
   },
   data() {

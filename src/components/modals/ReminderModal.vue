@@ -12,17 +12,16 @@
         <span
           class="icon"
           :style="{
-            backgroundImage: `url(${
-              reminder.image && grimoire.isImageOptIn
-                ? Array.isArray(reminder.image)
-                  ? reminder.image[0]
-                  : reminder.image
-                : require(
-                    '../../assets/icons/' +
-                      (reminder.imageAlt || reminder.role) +
-                      '.webp',
-                  )
-            })`,
+            backgroundImage: `url(${getImage(
+              {
+                id: reminder.role,
+                team: reminder.team,
+                edition: reminder.edition,
+                image: reminder.image,
+                imageAlt: reminder.imageAlt,
+              },
+              0,
+            )})`,
           }"
         ></span>
         <span class="text">{{ reminder.name }}</span>
@@ -40,7 +39,7 @@
 
 <script>
 import Modal from "./Modal";
-import { mapMutations, mapState } from "vuex";
+import { mapGetters, mapMutations, mapState } from "vuex";
 
 /**
  * Helper function that maps a reminder name with a role-based object that provides necessary visual data.
@@ -48,9 +47,11 @@ import { mapMutations, mapState } from "vuex";
  * @return {function(*): {image: string|string[]|string|*, role: *, name: *, imageAlt: string|*}}
  */
 const mapReminder =
-  ({ id, image, imageAlt }) =>
+  ({ id, team, edition, image, imageAlt }) =>
   (name) => ({
     role: id,
+    team,
+    edition,
     image,
     imageAlt,
     name,
@@ -140,6 +141,7 @@ export default {
         this.players[this.playerIndex]
       );
     },
+    ...mapGetters(["getImage"]),
     ...mapState(["modals", "grimoire"]),
     ...mapState("players", ["players"]),
   },
@@ -221,7 +223,7 @@ ul.reminders .reminder {
     position: absolute;
     top: 0;
     width: 90%;
-    height: 90%;
+    height: 80%;
     background-size: 100%;
     background-position: center center;
     background-repeat: no-repeat;

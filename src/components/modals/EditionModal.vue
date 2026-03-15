@@ -36,20 +36,20 @@
         >Script Tool</a
       >
       and then upload the generated JSON either directly here or provide a URL
-      to such a hosted JSON file. There are also a multitude of existing popular
-      custom scripts, many of which can be found at
+      to a hosted file. There are also a multitude of existing popular custom
+      scripts, many of which can be found at
       <a href="https://botcscripts.com/?sort=num_favs" target="_blank"
         >botcscripts.com</a
       >.<br />
       <br />
-      To play with custom characters, please read
+      To play with your own homebrew characters, please read
       <a
         href="https://github.com/nicholas-eden/townsquare#custom-character-support"
         target="_blank"
         >the documentation</a
       >
-      on how to write a custom character definition file.
-      <b>Only load custom JSON files from sources that you trust!</b>
+      on how to write a custom character JSON object.
+      <b>Only load JSON files from sources that you trust!</b>
       <h3>Some popular custom scripts:</h3>
       <ul class="scripts">
         <li

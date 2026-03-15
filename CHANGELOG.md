@@ -1,5 +1,15 @@
 # Release Notes
 
+### Version 2.22.0
+- Migrated to official character art as default (with explicit permission from TPI), with an option to still use the unofficial art if desired
+- Changed all night reminder texts to the official night reminder texts
+- Added the official "Community Created Content" logo to the main page
+- Made the "Clear All" characters button (if used by the ST) also clear characters for all players
+- Made receiving a character as a player also clear all characters
+- Made the Drunk, Marionette, and Lil' Monsta tokens unable to be selected when building a bag
+- Added more "popular custom scripts" from the community
+- Added support for the "background" property from the script meta
+
 ### Version 2.21.7
 - Added Ventriloquist
 - Added small warning for STs on the voting screen to inform them if there are some unoccupied seats

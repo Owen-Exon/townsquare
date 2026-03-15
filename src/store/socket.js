@@ -141,6 +141,10 @@ class LiveSession {
       case "gs":
         this._updateGamestate(params);
         break;
+      case "clear":
+        if (!this._isSpectator) return;
+        this._store.dispatch("players/clearRoles");
+        break;
       case "player":
         this._updatePlayer(params);
         break;
@@ -452,6 +456,14 @@ class LiveSession {
   }
 
   /**
+   * Publish a grimoire clear event. ST only
+   */
+  sendClear() {
+    if (this._isSpectator) return;
+    this._send("clear");
+  }
+
+  /**
    * Publish an edition update. ST only
    * @param playerId
    */
@@ -581,21 +593,23 @@ class LiveSession {
           this._store.state.roles.get(value) ||
           this._store.getters.rolesJSONbyId.get(value) ||
           {};
+        if (
+          this._store.state.session.playerId === player.id &&
+          role.team !== "traveller"
+        ) {
+          this._store.dispatch("players/clearRoles");
+          if (!this._store.state.grimoire.isMuted) {
+            this._notify.currentTime = 0;
+            this._notify.play().catch((err) => {
+              console.warn("Audio play prevented by browser policy - ", err);
+            });
+          }
+        }
         this._store.commit("players/update", {
           player,
           property: "role",
           value: role,
         });
-        if (
-          this._store.state.session.playerId === player.id &&
-          role.team !== "traveller" &&
-          !this._store.state.grimoire.isMuted
-        ) {
-          this._notify.currentTime = 0;
-          this._notify.play().catch((err) => {
-            console.warn("Audio play prevented by browser policy - ", err);
-          });
-        }
       }
     } else {
       // just update the player otherwise
@@ -1103,6 +1117,13 @@ class LiveSession {
 export default (store) => {
   // setup
   const session = new LiveSession(store);
+
+  // listen to actions
+  store.subscribeAction(({ type }) => {
+    if (type === "players/clearRoles") {
+      session.sendClear();
+    }
+  });
 
   // listen to mutations
   store.subscribe(({ type, payload }, state) => {

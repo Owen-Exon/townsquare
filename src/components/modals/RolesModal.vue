@@ -12,9 +12,15 @@
       </li>
       <li
         v-for="role in teamRoles"
-        :class="[role.team, role.selected ? 'selected' : '']"
+        :class="[
+          {
+            selected: role.selected,
+            disabled: isDisabled(role),
+          },
+          role.team,
+        ]"
         :key="role.id"
-        @click="role.selected = role.selected ? 0 : 1"
+        @click="role.selected = isDisabled(role) || role.selected ? 0 : 1"
       >
         <Token :role="role" />
         <font-awesome-icon icon="exclamation-triangle" v-if="role.setup" />
@@ -134,7 +140,16 @@ export default {
         for (let x = 0; x < composition[team]; x++) {
           if (this.roleSelection[team]) {
             const available = this.roleSelection[team].filter(
-              (role) => !role.selected,
+              (role) =>
+                !role.selected &&
+                !(
+                  role.special &&
+                  role.special.some(
+                    (special) =>
+                      special.type === "selection" &&
+                      special.name === "bag-disabled",
+                  )
+                ),
             );
             if (available.length) {
               randomElement(available).selected = 1;
@@ -184,6 +199,15 @@ export default {
         2000,
       );
     },
+    isDisabled(role) {
+      return (
+        role.special &&
+        role.special.some(
+          (special) =>
+            special.type === "selection" && special.name === "bag-disabled",
+        )
+      );
+    },
     ...mapMutations(["toggleModal"]),
   },
   mounted: function () {
@@ -208,15 +232,21 @@ ul.tokens {
     border-radius: 50%;
     width: 5vw;
     margin: 5px;
-    opacity: 0.5;
+    filter: brightness(50%);
     transition: all 250ms;
 
     @media (orientation: portrait) {
       width: 7vh;
     }
 
+    &.disabled {
+      filter: brightness(50%) grayscale(1);
+      .token {
+        cursor: not-allowed;
+      }
+    }
     &.selected {
-      opacity: 1;
+      filter: none;
       .buttons {
         display: flex;
       }

@@ -5,9 +5,8 @@ import socket from "./socket";
 import players from "./modules/players";
 import session from "./modules/session";
 import editionJSON from "../editions.json";
-import rolesJSON from "../characters.json";
+import rolesJSON from "../roles.json";
 import nightJSON from "../nightsheet.json";
-import npcJSON from "../non_player_characters.json";
 import jinxesJSON from "../jinxes.json";
 
 Vue.use(Vuex);
@@ -17,8 +16,17 @@ const clean = (id) => id.toLocaleLowerCase().replace(/[^a-z0-9]/g, "");
 
 const getRolesByEdition = (edition = editionJSON[0]) => {
   return new Map(
+    edition.roles
+      .map((id) => rolesJSONbyId.get(id))
+      .sort((a, b) => b.team.localeCompare(a.team))
+      .map((role) => [role.id, role]),
+  );
+};
+
+const getNpcs = () => {
+  return new Map(
     rolesFormatted
-      .filter((r) => r.edition === edition.id || edition.roles.includes(r.id))
+      .filter((r) => r.team === "fabled" || r.team === "loric")
       .sort((a, b) => b.team.localeCompare(a.team))
       .map((role) => [role.id, role]),
   );
@@ -45,12 +53,7 @@ const rolesFormatted = rolesJSON.map((role) => {
 const getTravellersNotInEdition = (edition = editionJSON[0]) => {
   return new Map(
     rolesFormatted
-      .filter(
-        (r) =>
-          r.team === "traveller" &&
-          r.edition !== edition.id &&
-          !edition.roles.includes(r.id),
-      )
+      .filter((r) => r.team === "traveller" && !edition.roles.includes(r.id))
       .map((role) => [role.id, role]),
   );
 };
@@ -76,21 +79,10 @@ const editionJSONbyId = new Map(
   editionJSON.map((edition) => [edition.id, edition]),
 );
 const rolesJSONbyId = new Map(rolesFormatted.map((role) => [role.id, role]));
-const npcs = new Map(
-  npcJSON.map((role) => {
-    role.firstNight = getFirstNightOrder(role.id);
-    role.otherNight = getOtherNightOrder(role.id);
-    return [role.id, role];
-  }),
-);
 
 // jinxes
 let jinxes = {};
 try {
-  // Note: can't fetch live list due to lack of CORS headers
-  // fetch("https://bloodontheclocktower.com/script/data/hatred.json")
-  //   .then(res => res.json())
-  //   .then(jinxesJSON => {
   jinxes = new Map(
     jinxesJSON.map(({ id, jinx }) => [
       clean(id),
@@ -133,6 +125,7 @@ export default new Vuex.Store({
       isMenuOpen: false,
       isStatic: false,
       isMuted: false,
+      isArtUnofficial: false,
       isImageOptIn: false,
       isMockAssignmentsAllowed: false,
       zoom: 0,
@@ -156,7 +149,7 @@ export default new Vuex.Store({
     edition: editionJSONbyId.get("tb"),
     roles: getRolesByEdition(),
     otherTravellers: getTravellersNotInEdition(),
-    npcs,
+    npcs: getNpcs(),
     jinxes,
   },
   getters: {
@@ -191,6 +184,54 @@ export default new Vuex.Store({
     },
     getFirstNightOrder: () => (id) => getFirstNightOrder(id),
     getOtherNightOrder: () => (id) => getOtherNightOrder(id),
+    getImage:
+      ({ grimoire }) =>
+      (role, alignmentIndex) => {
+        if (role.image && grimoire.isImageOptIn) {
+          if (Array.isArray(role.image)) {
+            return role.image[alignmentIndex] || role.image[0];
+          }
+          return role.image;
+        }
+
+        const useUnofficialArt =
+          [
+            "townsfolk",
+            "outsider",
+            "minion",
+            "demon",
+            "traveller",
+            "fabled",
+            "loric",
+            "good",
+            "evil",
+          ].includes(role.id) || grimoire.isArtUnofficial;
+        const alignment = ["fabled", "loric"].includes(role.team)
+          ? ""
+          : ["townsfolk", "outsider"].includes(role.team)
+            ? alignmentIndex === 0
+              ? "_g"
+              : "_e"
+            : ["minion", "demon"].includes(role.team)
+              ? alignmentIndex === 0
+                ? "_e"
+                : "_g"
+              : alignmentIndex === 1
+                ? "_g"
+                : alignmentIndex === 2
+                  ? "_e"
+                  : "";
+        return require(
+          "../assets/icons/" +
+            (useUnofficialArt || role.imageAlt
+              ? "unofficial/" +
+                (alignmentIndex > 0 ? "Alternate/" : "") +
+                (role.imageAlt || role.id) +
+                (role.team === "traveller" ? alignment : "")
+              : "official/" + role.edition + "/" + role.id + alignment) +
+            ".webp",
+        );
+      },
     clean: () => (id) => clean(id),
     rolesJSONbyId: () => rolesJSONbyId,
   },
@@ -250,6 +291,7 @@ export default new Vuex.Store({
       }
     },
     toggleGrimoire: toggle("isPublic"),
+    toggleUnofficial: toggle("isArtUnofficial"),
     toggleImageOptIn: toggle("isImageOptIn"),
     toggleModal({ modals }, name) {
       if (name) {
@@ -333,7 +375,7 @@ export default new Vuex.Store({
         ...processedRoles
           .filter((r) => r.team === "fabled" || r.team === "loric")
           .map((r) => [r.id, r]),
-        ...npcJSON.map((role) => [role.id, role]),
+        ...state.npcs,
       ]);
       // update extraTravellers map to only show travellers not in this script
       state.otherTravellers = new Map(

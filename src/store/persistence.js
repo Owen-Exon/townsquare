@@ -17,6 +17,9 @@ module.exports = (store) => {
   if (localStorage.getItem("mockAssignments")) {
     store.commit("toggleMockAssignments", true);
   }
+  if (localStorage.getItem("unofficial")) {
+    store.commit("toggleUnofficial", true);
+  }
   if (localStorage.getItem("imageOptIn")) {
     store.commit("toggleImageOptIn", true);
   }
@@ -115,6 +118,13 @@ module.exports = (store) => {
           localStorage.setItem("mockAssignments", 1);
         } else {
           localStorage.removeItem("mockAssignments");
+        }
+        break;
+      case "toggleUnofficial":
+        if (state.grimoire.isArtUnofficial) {
+          localStorage.setItem("unofficial", 1);
+        } else {
+          localStorage.removeItem("unofficial");
         }
         break;
       case "toggleImageOptIn":
