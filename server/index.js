@@ -1,6 +1,5 @@
 const crypto = require("crypto");
-const fs = require("fs");
-const https = require("https");
+const http = require("http");
 const { URL } = require("url");
 const WebSocket = require("ws");
 const client = require("prom-client");
@@ -14,24 +13,13 @@ register.setDefaultLabels({
 
 const PING_INTERVAL = 30000; // 30 seconds
 
-const options = {};
-
-if (process.env.NODE_ENV !== "development") {
-  options.cert = fs.readFileSync(
-    "/etc/letsencrypt/live/clocktower.live/fullchain.pem",
-  );
-  options.key = fs.readFileSync(
-    "/etc/letsencrypt/live/clocktower.live/privkey.pem",
-  );
-}
-
-const server = https.createServer(options);
+const server = http.createServer();
 const wss = new WebSocket.Server({
   ...(process.env.NODE_ENV === "development" ? { port: 8001 } : { server }),
   verifyClient: (info) =>
     info.origin &&
     !!info.origin.match(
-      /^https?:\/\/([^.]+\.github\.io|localhost|clocktower\.live)/i,
+      /^https?:\/\/([^.]+\.github\.io|localhost|clocktower\.live|[^.]+\.onrender\.com)/i,
     ),
 });
 
@@ -306,7 +294,7 @@ wss.on("close", function close() {
 // prod mode with stats API
 if (process.env.NODE_ENV !== "development") {
   console.log("server starting");
-  server.listen(8001);
+  server.listen(process.env.PORT || 8001);
   server.on("request", (req, res) => {
     res.setHeader("Content-Type", register.contentType);
     register.metrics().then((out) => res.end(out));
