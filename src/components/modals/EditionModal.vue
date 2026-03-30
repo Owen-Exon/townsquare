@@ -108,7 +108,7 @@ export default {
       isCustom: false,
     };
   },
-  computed: mapState(["roles", "modals", "edition", "jinxes"]),
+  computed: mapState(["roles", "modals", "edition"]),
   methods: {
     openUpload() {
       this.$refs.upload.click();
@@ -159,7 +159,7 @@ export default {
       }
     },
     loadOfficial(edition) {
-      this.$store.commit("players/setNpcs", {});
+      this.$store.commit("setNpcs", {});
       this.$store.commit("setEdition", edition);
     },
     parseRoles(roles) {
@@ -182,42 +182,12 @@ export default {
           this.$store.getters.clean(id),
         );
       }
+      this.$store.commit("setNpcs", []);
       this.$store.commit("setCustomRoles", roles);
       this.$store.commit(
         "setEdition",
         Object.assign({}, meta, { id: "custom" }),
       );
-      // check for fabled & loric and set those too, if present
-      const npcs = [];
-      roles.forEach((role) => {
-        if (this.$store.state.npcs.has(role.id || role)) {
-          npcs.push(this.$store.state.npcs.get(role.id || role));
-        }
-      });
-      if (
-        this.roles
-          .values()
-          .some((role) =>
-            new Map([
-              ...(this.jinxes.get(role.id) || []),
-              ...(role.jinxes || []),
-            ])
-              .keys()
-              .some((second) => this.roles.get(second)),
-          ) &&
-        !npcs.some((npc) => npc.id === "djinn")
-      ) {
-        npcs.push(this.$store.state.npcs.get("djinn"));
-      }
-      if (
-        (this.roles.values().some((role) => role.isCustom) ||
-          this.edition.bootlegger) &&
-        !npcs.some((npc) => npc.id === "bootlegger")
-      ) {
-        npcs.push(this.$store.state.npcs.get("bootlegger"));
-      }
-      this.$store.commit("players/setNpcs", {});
-      this.$store.commit("players/setNpcs", { npcs });
       this.isCustom = false;
     },
     ...mapMutations(["toggleModal"]),

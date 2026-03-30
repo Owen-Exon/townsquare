@@ -63,7 +63,8 @@ export default {
   computed: {
     availableReminders() {
       let reminders = [];
-      const { players, bluffs } = this.$store.state.players;
+      const { npcs, bluffs, otherTravellers } = this.$store.state;
+      const { players } = this.$store.state.players;
       this.$store.state.roles.forEach((role) => {
         // add reminders from player roles and bluff/other roles
         if (
@@ -98,7 +99,7 @@ export default {
         }
       });
       // add npc reminders
-      this.$store.state.players.npcs.forEach((role) => {
+      npcs.forEach((role) => {
         role.reminders.map(mapReminder(role)).forEach((reminder1) => {
           if (
             !reminders.some(
@@ -113,7 +114,7 @@ export default {
       });
 
       // add out of script traveller reminders
-      this.$store.state.otherTravellers.forEach((role) => {
+      otherTravellers.forEach((role) => {
         if (players.some((p) => p.role.id === role.id)) {
           role.reminders.map(mapReminder(role)).forEach((reminder1) => {
             if (
@@ -129,9 +130,9 @@ export default {
         }
       });
 
-      reminders.push({ role: "good", name: "Good" });
-      reminders.push({ role: "evil", name: "Evil" });
-      reminders.push({ role: "fabled", name: "Custom Note" });
+      reminders.push({ imageAlt: "good", name: "Good" });
+      reminders.push({ imageAlt: "evil", name: "Evil" });
+      reminders.push({ imageAlt: "custom", name: "Custom Note" });
       return reminders;
     },
     isDisplayed() {
@@ -154,10 +155,10 @@ export default {
     addReminder(reminder) {
       const player = this.$store.state.players.players[this.playerIndex];
       let value;
-      if (reminder.role === "fabled") {
+      if (reminder.imageAlt === "custom") {
         const name = prompt("Add a custom reminder note");
         if (!name) return;
-        value = [...player.reminders, { role: "fabled", name }];
+        value = [...player.reminders, { imageAlt: "custom", name }];
       } else {
         value = [...player.reminders, reminder];
       }

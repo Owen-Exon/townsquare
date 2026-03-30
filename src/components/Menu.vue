@@ -305,8 +305,8 @@ export default {
         !this.npcs.some((npc) => npc.id === "tor")
       );
     },
-    ...mapState(["grimoire", "session", "edition"]),
-    ...mapState("players", ["players", "npcs"]),
+    ...mapState(["grimoire", "session", "edition", "npcs"]),
+    ...mapState("players", ["players"]),
   },
   data() {
     return {
@@ -412,6 +412,7 @@ export default {
           this.$store.commit("session/nomination");
         }
         this.$store.commit("players/clear");
+        this.$store.commit("setBluff");
       }
     },
     clearRoles() {

@@ -308,8 +308,9 @@ export default {
       "edition",
       "grimoire",
       "session",
+      "npcs",
     ]),
-    ...mapState("players", ["players", "npcs"]),
+    ...mapState("players", ["players"]),
   },
   methods: {
     getNightOrderImage(role) {

@@ -121,7 +121,7 @@ export default new Vuex.Store({
     grimoire: {
       isNight: false,
       isNightOrder: true,
-      isPublic: true,
+      isPublic: false,
       isMenuOpen: false,
       isStatic: false,
       isMuted: false,
@@ -148,8 +148,10 @@ export default new Vuex.Store({
     },
     edition: editionJSONbyId.get("tb"),
     roles: getRolesByEdition(),
+    npcs: [],
+    bluffs: [{}, {}, {}],
     otherTravellers: getTravellersNotInEdition(),
-    npcs: getNpcs(),
+    otherNpcs: getNpcs(),
     jinxes,
   },
   getters: {
@@ -157,29 +159,32 @@ export default new Vuex.Store({
      * Return all custom roles, with default values and non-essential data stripped.
      * Role object keys will be replaced with a numerical index to conserve bandwidth.
      * @param roles
+     * @param npcs
      * @returns {[]}
      */
-    customRolesStripped: ({ roles }) => {
+    customRolesStripped: ({ roles, npcs }) => {
       const customRoles = [];
       const customKeys = Object.keys(customRole);
       const strippedProps = [];
-      roles.forEach((role) => {
-        if (!role.isCustom) {
-          customRoles.push({ id: role.id });
-        } else {
-          const strippedRole = {};
-          for (let prop in role) {
-            if (strippedProps.includes(prop)) {
-              continue;
+      new Map([...roles, ...npcs.map((npc) => [npc.id, npc])]).forEach(
+        (role) => {
+          if (!role.isCustom) {
+            customRoles.push({ id: role.id });
+          } else {
+            const strippedRole = {};
+            for (let prop in role) {
+              if (strippedProps.includes(prop)) {
+                continue;
+              }
+              const value = role[prop];
+              if (customKeys.includes(prop) && value !== customRole[prop]) {
+                strippedRole[customKeys.indexOf(prop)] = value;
+              }
             }
-            const value = role[prop];
-            if (customKeys.includes(prop) && value !== customRole[prop]) {
-              strippedRole[customKeys.indexOf(prop)] = value;
-            }
+            customRoles.push(strippedRole);
           }
-          customRoles.push(strippedRole);
-        }
-      });
+        },
+      );
       return customRoles;
     },
     getFirstNightOrder: () => (id) => getFirstNightOrder(id),
@@ -195,17 +200,7 @@ export default new Vuex.Store({
         }
 
         const useUnofficialArt =
-          [
-            "townsfolk",
-            "outsider",
-            "minion",
-            "demon",
-            "traveller",
-            "fabled",
-            "loric",
-            "good",
-            "evil",
-          ].includes(role.id) || grimoire.isArtUnofficial;
+          ["good", "evil"].includes(role.imageAlt) || grimoire.isArtUnofficial;
         const alignment = ["fabled", "loric"].includes(role.team)
           ? ""
           : ["townsfolk", "outsider"].includes(role.team)
@@ -223,12 +218,16 @@ export default new Vuex.Store({
                   : "";
         return require(
           "../assets/icons/" +
-            (useUnofficialArt || role.imageAlt
+            (useUnofficialArt
               ? "unofficial/" +
                 (alignmentIndex > 0 ? "Alternate/" : "") +
                 (role.imageAlt || role.id) +
                 (role.team === "traveller" ? alignment : "")
-              : "official/" + role.edition + "/" + role.id + alignment) +
+              : "official/" +
+                (role.imageAlt ? "generic" : role.edition) +
+                "/" +
+                (role.imageAlt || role.id) +
+                alignment) +
             ".webp",
         );
       },
@@ -364,27 +363,79 @@ export default new Vuex.Store({
         .filter((role) => role.name && role.ability && role.team)
         // sort by team
         .sort((a, b) => b.team.localeCompare(a.team));
-      // convert to Map without NPCs
+      // convert to Map without NPCs and set roles
       state.roles = new Map(
         processedRoles
           .filter((role) => role.team !== "fabled" && role.team !== "loric")
           .map((role) => [role.id, role]),
       );
       // update NPCS to include custom NPCs from this script
-      state.npcs = new Map([
+      state.otherNpcs = new Map([
         ...processedRoles
           .filter((r) => r.team === "fabled" || r.team === "loric")
           .map((r) => [r.id, r]),
-        ...state.npcs,
+        ...state.otherNpcs,
       ]);
       // update extraTravellers map to only show travellers not in this script
       state.otherTravellers = new Map(
         rolesFormatted
           .filter(
-            (r) => r.team === "traveller" && !roles.some((i) => i.id === r.id),
+            (r) =>
+              r.team === "traveller" &&
+              !processedRoles.some((i) => i.id === r.id),
           )
           .map((role) => [role.id, role]),
       );
+      // check for NPCs and set those, if present
+      processedRoles.forEach((role) => {
+        if (
+          state.otherNpcs.has(role.id || role) &&
+          !state.npcs.some((npc) => npc.id === role.id)
+        ) {
+          state.npcs.push(state.otherNpcs.get(role.id || role));
+        }
+      });
+      if (
+        processedRoles.some((role) =>
+          new Map([
+            ...(state.jinxes.get(role.id) || []),
+            ...(role.jinxes || []),
+          ])
+            .keys()
+            .some((second) =>
+              processedRoles.some((role) => role.id === second),
+            ),
+        ) &&
+        !state.npcs.some((npc) => npc.id === "djinn")
+      ) {
+        state.npcs.push(state.otherNpcs.get("djinn"));
+      }
+      if (
+        processedRoles.some((role) => role.isCustom) &&
+        !state.npcs.some((npc) => npc.id === "bootlegger")
+      ) {
+        state.npcs.push(state.otherNpcs.get("bootlegger"));
+      }
+    },
+    setBluff(state, { index, role } = {}) {
+      if (index !== undefined) {
+        state.bluffs.splice(index, 1, role);
+      } else {
+        state.bluffs = [{}, {}, {}];
+      }
+    },
+    setNpcs(state, { index, npcs } = {}) {
+      if (index !== undefined) {
+        state.npcs.splice(index, 1);
+      } else if (npcs) {
+        if (!Array.isArray(npcs)) {
+          state.npcs.push(npcs);
+        } else {
+          state.npcs = npcs;
+        }
+      } else {
+        state.npcs = [];
+      }
     },
     setEdition(state, edition) {
       state.grimoire.nightNumber = 0;
@@ -398,6 +449,14 @@ export default new Vuex.Store({
       } else {
         state.edition = edition;
       }
+
+      if (
+        edition.bootlegger &&
+        !state.npcs.some((npc) => npc.id === "bootlegger")
+      ) {
+        state.npcs.push(state.otherNpcs.get("bootlegger"));
+      }
+
       state.modals.edition = false;
     },
   },

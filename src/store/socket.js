@@ -340,8 +340,7 @@ class LiveSession {
         isLightweight,
       });
     } else {
-      const { session, grimoire } = this._store.state;
-      const { npcs } = this._store.state.players;
+      const { session, grimoire, npcs } = this._store.state;
       this.sendEdition(playerId);
       this._sendDirect(playerId, "gs", {
         gamestate: this._gamestate,
@@ -449,8 +448,8 @@ class LiveSession {
         isVoteInProgress,
       });
       this._store.commit("session/setMarkedPlayer", markedPlayer);
-      this._store.commit("players/setNpcs", {
-        npcs: npcs.map((f) => this._store.state.npcs.get(f.id) || f),
+      this._store.commit("setNpcs", {
+        npcs: npcs.map((f) => this._store.state.otherNpcs.get(f.id) || f),
       });
     }
   }
@@ -491,13 +490,17 @@ class LiveSession {
     this._store.commit("setEdition", edition);
     if (roles) {
       this._store.commit("setCustomRoles", roles);
-      if (this._store.state.roles.size !== roles.length) {
-        const missing = [];
-        roles.forEach(({ id }) => {
-          if (!this._store.state.roles.get(id)) {
-            missing.push(id);
-          }
-        });
+      const missing = [];
+      roles.forEach(({ id }) => {
+        if (
+          id &&
+          !this._store.state.roles.get(id) &&
+          !this._store.state.otherNpcs.get(id)
+        ) {
+          missing.push(id);
+        }
+      });
+      if (missing.length) {
         alert(
           `This session contains custom characters that can't be found. ` +
             `Please load them before joining! ` +
@@ -514,10 +517,9 @@ class LiveSession {
    */
   sendNpcs() {
     if (this._isSpectator) return;
-    const { npcs } = this._store.state.players;
     this._send(
       "npcs",
-      npcs.map((f) => (f.isCustom ? f : { id: f.id })),
+      this._store.state.npcs.map((f) => (f.isCustom ? f : { id: f.id })),
     );
   }
 
@@ -528,8 +530,8 @@ class LiveSession {
    */
   _updateNpcs(npcs) {
     if (!this._isSpectator) return;
-    this._store.commit("players/setNpcs", {
-      npcs: npcs.map((f) => this._store.state.npcs.get(f.id) || f),
+    this._store.commit("setNpcs", {
+      npcs: npcs.map((f) => this._store.state.otherNpcs.get(f.id) || f),
     });
   }
 
@@ -1178,7 +1180,7 @@ export default (store) => {
       case "setEdition":
         session.sendEdition();
         break;
-      case "players/setNpcs":
+      case "setNpcs":
         session.sendNpcs();
         break;
       case "session/setMarkedPlayer":

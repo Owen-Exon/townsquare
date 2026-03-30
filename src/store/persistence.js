@@ -40,16 +40,16 @@ module.exports = (store) => {
   }
   if (localStorage.bluffs !== undefined) {
     JSON.parse(localStorage.bluffs).forEach((role, index) => {
-      store.commit("players/setBluff", {
+      store.commit("setBluff", {
         index,
         role: store.state.roles.get(role) || {},
       });
     });
   }
   if (localStorage.npcs !== undefined) {
-    store.commit("players/setNpcs", {
+    store.commit("setNpcs", {
       npcs: JSON.parse(localStorage.npcs).map(
-        (npc) => store.state.npcs.get(npc.id) || npc,
+        (npc) => store.state.otherNpcs.get(npc.id) || npc,
       ),
     });
   }
@@ -146,27 +146,37 @@ module.exports = (store) => {
         if (state.edition.isOfficial) {
           localStorage.removeItem("roles");
         }
+        localStorage.setItem(
+          "npcs",
+          JSON.stringify(
+            state.npcs.map((npc) => (npc.isCustom ? npc : { id: npc.id })),
+          ),
+        );
         break;
       case "setCustomRoles":
         if (!payload.length) {
           localStorage.removeItem("roles");
         } else {
           localStorage.setItem("roles", JSON.stringify(payload));
+          localStorage.setItem(
+            "npcs",
+            JSON.stringify(
+              state.npcs.map((npc) => (npc.isCustom ? npc : { id: npc.id })),
+            ),
+          );
         }
         break;
-      case "players/setBluff":
+      case "setBluff":
         localStorage.setItem(
           "bluffs",
-          JSON.stringify(state.players.bluffs.map(({ id }) => id)),
+          JSON.stringify(state.bluffs.map(({ id }) => id)),
         );
         break;
-      case "players/setNpcs":
+      case "setNpcs":
         localStorage.setItem(
           "npcs",
           JSON.stringify(
-            state.players.npcs.map((npc) =>
-              npc.isCustom ? npc : { id: npc.id },
-            ),
+            state.npcs.map((npc) => (npc.isCustom ? npc : { id: npc.id })),
           ),
         );
         break;

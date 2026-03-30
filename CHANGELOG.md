@@ -1,5 +1,13 @@
 # Release Notes
 
+### Version 2.22.2
+- Added Knaves and God of Ug
+- Made the app default to the "Grimoire" view instead of the "Town Square" view when first opened
+- Implemented official "generic" character icons
+- Fixed Bootlegger not automatically being added when a homebrew NPC is the only homebrew on script
+- Fixed empty bluffs not being saved to state when all players are cleared
+- Fixed NPCs showing on the intro screen
+
 ### Version 2.22.1
 - Made the Drunk, Marionette, and Lil' Monsta tokens able to be selected again, so that the randomiser may still "choose" these characters, but instead made the bag unable to be sent until these characters are deselected
 

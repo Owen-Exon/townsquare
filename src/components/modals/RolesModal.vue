@@ -141,8 +141,8 @@ export default {
         roles.some((role) => role.selected && this.isDisabled(role)),
       );
     },
-    ...mapState(["grimoire", "roles", "modals"]),
-    ...mapState("players", ["players", "npcs"]),
+    ...mapState(["grimoire", "roles", "npcs", "modals"]),
+    ...mapState("players", ["players"]),
     ...mapGetters({ nonTravellers: "players/nonTravellers" }),
   },
   methods: {

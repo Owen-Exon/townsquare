@@ -47,7 +47,11 @@
       </ul>
     </div>
 
-    <div class="npcs" :class="{ closed: !isNpcsOpen }" v-if="npcs.length">
+    <div
+      class="npcs"
+      :class="{ closed: !isNpcsOpen }"
+      v-if="npcs.length && players.length"
+    >
       <h3>
         <span>NPCs</span>
         <font-awesome-icon icon="times-circle" @click.stop="toggleNpcs" />
@@ -111,8 +115,8 @@ export default {
   },
   computed: {
     ...mapGetters({ nightOrder: "players/nightOrder" }),
-    ...mapState(["grimoire", "roles", "session"]),
-    ...mapState("players", ["players", "bluffs", "npcs"]),
+    ...mapState(["grimoire", "roles", "session", "bluffs", "npcs"]),
+    ...mapState("players", ["players"]),
   },
   data() {
     return {
@@ -139,7 +143,7 @@ export default {
     },
     removeNpc(index) {
       if (this.session.isSpectator) return;
-      this.$store.commit("players/setNpcs", { index });
+      this.$store.commit("setNpcs", { index });
     },
     handleTrigger(playerIndex, [method, params]) {
       if (typeof this[method] === "function") {
