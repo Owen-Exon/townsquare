@@ -32,6 +32,27 @@ export default {
   },
   computed: {
     gamestate: function () {
+      function cleanRoles(roles) {
+        return roles.map((role) => {
+          if (role.isCustom) {
+            const cleanedRole = { ...role };
+            delete cleanedRole.isCustom;
+            delete cleanedRole.selected;
+            delete cleanedRole.imageAlt;
+            delete cleanedRole.firstNightInEdition;
+            delete cleanedRole.otherNightInEdition;
+            if (cleanedRole.jinxes) {
+              cleanedRole.jinxes = [...cleanedRole.jinxes].map(
+                ([id, reason]) => ({ id, reason }),
+              );
+            }
+            return cleanedRole;
+          } else {
+            return { id: role.id };
+          }
+        });
+      }
+
       return JSON.stringify({
         bluffs: this.bluffs.map(({ id }) => id),
         edition: this.edition.isOfficial
@@ -39,8 +60,8 @@ export default {
           : this.edition,
         roles: this.edition.isOfficial
           ? ""
-          : this.roles.map((role) => (role.isCustom ? role : { id: role.id })),
-        npcs: this.npcs.map((npc) => (npc.isCustom ? npc : { id: npc.id })),
+          : cleanRoles([...this.roles.values()]),
+        npcs: cleanRoles(this.npcs),
         players: this.players.players.map((player) => ({
           ...player,
           role: player.role.id || {},

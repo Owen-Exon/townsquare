@@ -1,5 +1,9 @@
 # Release Notes
 
+### Version 2.22.3
+- Fixed Game State Modal not opening with custom scripts selected
+- Fixed loading scripts sequentially with the same homebrew character(s) in them causing an error
+
 ### Version 2.22.2
 - Added Knaves and God of Ug
 - Made the app default to the "Grimoire" view instead of the "Town Square" view when first opened
