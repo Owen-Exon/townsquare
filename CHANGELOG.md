@@ -3,6 +3,7 @@
 ### Version 2.22.3
 - Fixed Game State Modal not opening with custom scripts selected
 - Fixed loading scripts sequentially with the same homebrew character(s) in them causing an error
+- Fixed custom reminders behaving like regular reminders on the grimoire
 
 ### Version 2.22.2
 - Added Knaves and God of Ug

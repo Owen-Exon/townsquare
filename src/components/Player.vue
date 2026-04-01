@@ -268,7 +268,7 @@
         class="reminder"
         :key="reminder.role + ' ' + reminder.name"
         v-for="reminder in player.reminders"
-        :class="[reminder.role]"
+        :class="[{ custom: reminder.imageAlt === 'custom' }, reminder.role]"
         @click="removeReminder(reminder)"
       >
         <span
@@ -1117,7 +1117,7 @@ li.move:not(.from) .player .overlay svg.move {
     }
   }
 
-  &.fabled {
+  &.custom {
     .icon {
       display: none;
     }
