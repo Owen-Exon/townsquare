@@ -353,7 +353,6 @@ export default new Vuex.Store({
           role.firstNight = Math.abs(role.firstNight);
           role.otherNight = Math.abs(role.otherNight);
           if (role.jinxes && role.jinxes.length) {
-            console.log(role.jinxes);
             role.jinxes = new Map(
               role.jinxes.map(({ id, reason }) => [clean(id), reason]),
             );
