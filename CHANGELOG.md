@@ -1,5 +1,8 @@
 # Release Notes
 
+### Version 2.22.4
+- Updated character data to match Gardener and Bootlegger changes
+
 ### Version 2.22.3
 - Fixed Game State Modal not opening with custom scripts selected
 - Fixed loading scripts sequentially with the same homebrew character(s) in them causing an error
