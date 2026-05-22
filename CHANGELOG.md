@@ -1,5 +1,8 @@
 # Release Notes
 
+### Version 2.22.5
+- Added Tor to first night order
+
 ### Version 2.22.4
 - Updated character data to match Gardener and Bootlegger changes
 
