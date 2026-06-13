@@ -1,5 +1,14 @@
 # Release Notes
 
+### Version 2.22.6
+- Made Organ Grinder secret vote timed instead of instantaneous
+- Added question marks on unknown votes for players during Organ Grinder secret vote
+- Made Organ Grinder not revealed to be in play until the vote starts
+- Added message during Organ Grinder secret vote to inform players that the vote is secret
+- Fixed ST clicking players after a vote to change their vote sometimes not working
+- Fixed ST clicking a Banshee player after a vote not being able to remove both votes (would previously just toggle between 1 and 2 votes)
+- Made hand raise button in player menu hidden while a nomination is active, as the hand is hidden regardless and this could easily be confused with the player's voting hand
+
 ### Version 2.22.5
 - Added Tor to first night order
 
