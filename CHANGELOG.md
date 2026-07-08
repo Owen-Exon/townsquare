@@ -1,5 +1,8 @@
 # Release Notes
 
+### Version 2.22.7
+- Updated Magician/Legion and Mathematician jinxes
+
 ### Version 2.22.6
 - Made Organ Grinder secret vote timed instead of instantaneous
 - Added question marks on unknown votes for players during Organ Grinder secret vote
