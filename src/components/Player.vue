@@ -289,7 +289,24 @@
             )})`,
           }"
         ></span>
-        <span class="text">{{ reminder.name }}</span>
+        <svg viewBox="0 0 150 150" class="name">
+          <path
+            d="M 13 75 C 13 160, 138 160, 138 75"
+            id="curve"
+            fill="transparent"
+          />
+          <text
+            width="150"
+            x="66.6%"
+            text-anchor="middle"
+            class="label mozilla"
+            :font-size="reminder.name | nameToFontSize"
+          >
+            <textPath xlink:href="#curve">
+              {{ reminder.name }}
+            </textPath>
+          </text>
+        </svg>
       </div>
     </template>
     <div class="reminder add" @click="$emit('trigger', ['openReminderModal'])">
@@ -304,6 +321,9 @@ import Token from "./Token";
 import { mapGetters, mapState } from "vuex";
 
 export default {
+  filters: {
+    nameToFontSize: (name) => (name && name.length > 10 ? "90%" : "110%"),
+  },
   components: {
     Token,
   },
@@ -1059,13 +1079,12 @@ li.move:not(.from) .player .overlay svg.move {
 .circle .reminder {
   background: url("../assets/reminder.webp") center center;
   background-size: 100%;
-  width: 50%;
-  height: 0;
-  padding-bottom: 50%;
+  width: 60%;
+  aspect-ratio:1;
   box-sizing: content-box;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   margin: 5px 0 0 -25%;
   border-radius: 50%;
   border: 3px solid black;
@@ -1073,22 +1092,33 @@ li.move:not(.from) .player .overlay svg.move {
   transition: all 200ms;
   cursor: pointer;
 
-  .text {
-    line-height: 90%;
-    color: white;
-    font-size: 50%;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 50%;
-    height: 100%;
+  .name {
     width: 100%;
-    position: absolute;
-    top: 15%;
-    text-shadow:
-      0 1px 1px #000,
-      0 -1px 1px #000,
-      1px 0 1px #000,
-      -1px 0 1px #000;
+    aspect-ratio:1;
+    font-size: 30px; // svg fonts are relative to document font size
+    translateY:-50%;
+    .label {
+      dominant-baseline: middle;
+      fill: #fff;
+      stroke: #000;
+      stroke-width: 2px;
+      paint-order: stroke;
+      text-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+      letter-spacing: 1px;
+      font-weight:400;
+      font-family:Trade-Gothic;
+
+      @-moz-document url-prefix() {
+        &.mozilla {
+          // Vue doesn't support scoped media queries, so we have to use a second css class
+          stroke: none;
+          text-shadow: none;
+          filter: drop-shadow(0 1.5px 0 white) drop-shadow(0 -1.5px 0 white)
+            drop-shadow(1.5px 0 0 white) drop-shadow(-1.5px 0 0 white)
+            drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+        }
+      }
+    }
   }
 
   .icon,
@@ -1097,16 +1127,16 @@ li.move:not(.from) .player .overlay svg.move {
     position: absolute;
     top: 0;
     width: 90%;
-    height: 80%;
+    height: 90%;
     background-size: 100%;
     background-position: center center;
     background-repeat: no-repeat;
-    background-image: url("../assets/plus.webp");
     transition: opacity 200ms;
   }
 
   &:after {
-    background-image: url("../assets/x.webp");
+    background-image: url("../assets/bin.svg");
+    background-size: 50%;
     opacity: 0;
     top: 5%;
     height: 90%;

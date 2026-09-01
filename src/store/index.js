@@ -200,7 +200,7 @@ export default new Vuex.Store({
         }
 
         const useUnofficialArt =
-          ["good", "evil"].includes(role.imageAlt) || grimoire.isArtUnofficial;
+          [].includes(role.imageAlt) || grimoire.isArtUnofficial;
         const alignment = ["fabled", "loric"].includes(role.team)
           ? ""
           : ["townsfolk", "outsider"].includes(role.team)

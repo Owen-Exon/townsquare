@@ -170,6 +170,12 @@ export default {
 }
 
 @font-face {
+  font-family: Trade-Gothic;
+  src: url("assets/fonts/TradeGothic.otf");
+  font-display: swap;
+}
+
+@font-face {
   font-family: LHF;
   src: url("assets/fonts/LHF_Unlovable.ttf");
   font-display: swap;

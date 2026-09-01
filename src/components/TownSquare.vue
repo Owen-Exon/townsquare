@@ -323,7 +323,7 @@ export default {
     }
     > .reminder {
       margin-left: calc(-25% - 2.5px);
-      width: 50%;
+      width: 55%;
       pointer-events: all;
     }
   }

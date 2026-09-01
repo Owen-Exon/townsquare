@@ -24,7 +24,24 @@
             )})`,
           }"
         ></span>
-        <span class="text">{{ reminder.name }}</span>
+        <svg viewBox="0 0 150 150" class="name">
+          <path
+            d="M 13 75 C 13 160, 138 160, 138 75"
+            id="curve"
+            fill="transparent"
+          />
+          <text
+            width="150"
+            x="66.6%"
+            text-anchor="middle"
+            class="label mozilla"
+            :font-size="reminder.name | nameToFontSize"
+          >
+            <textPath xlink:href="#curve">
+              {{ reminder.name }}
+            </textPath>
+          </text>
+        </svg>
       </li>
     </ul>
     <input
@@ -58,6 +75,9 @@ const mapReminder =
   });
 
 export default {
+  filters: {
+    nameToFontSize: (name) => (name && name.length > 10 ? "90%" : "110%"),
+  },
   components: { Modal },
   props: ["playerIndex"],
   computed: {
@@ -224,22 +244,37 @@ ul.reminders .reminder {
     position: absolute;
     top: 0;
     width: 90%;
-    height: 80%;
+    height: 90%;
     background-size: 100%;
     background-position: center center;
     background-repeat: no-repeat;
   }
 
-  .text {
-    color: black;
-    font-size: 65%;
-    font-weight: bold;
-    text-align: center;
-    top: 28%;
-    width: 80%;
-    line-height: 1;
-    @media (orientation: portrait) {
-      font-size: 100%;
+  .name {
+    width: 100%;
+    height: 100%;
+    font-size: 20px; // svg fonts are relative to document font size
+    .label {
+      dominant-baseline: middle;
+      fill: #fff;
+      stroke: #000;
+      stroke-width: 2px;
+      paint-order: stroke;
+      text-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+      letter-spacing: 1px;
+      font-weight:400;
+      font-family:Trade-Gothic;
+
+      @-moz-document url-prefix() {
+        &.mozilla {
+          // Vue doesn't support scoped media queries, so we have to use a second css class
+          stroke: none;
+          text-shadow: none;
+          filter: drop-shadow(0 1.5px 0 white) drop-shadow(0 -1.5px 0 white)
+            drop-shadow(1.5px 0 0 white) drop-shadow(-1.5px 0 0 white)
+            drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+        }
+      }
     }
   }
 
