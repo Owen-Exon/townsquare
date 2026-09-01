@@ -212,7 +212,7 @@ ul.heading {
 
 ul.tokens li {
   border-radius: 50%;
-  width: 6vw;
+  width: max(6vw,120px);
   margin: 1%;
   transition: transform 500ms ease;
 

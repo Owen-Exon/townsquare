@@ -78,7 +78,7 @@
           <font-awesome-icon icon="people-arrows" />
           Pass out {{ selectedRoles }} characters randomly
         </div>
-        <div class="button" @click="selectRandomRoles">
+        <div class="button" @click="shuffleRoles">
           <font-awesome-icon icon="random" />
           Shuffle characters
         </div>
@@ -107,8 +107,6 @@ import Modal from "./Modal";
 import gameJSON from "./../../counts.json";
 import Token from "./../Token";
 import { mapGetters, mapMutations, mapState } from "vuex";
-
-const randomElement = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 export default {
   components: {
@@ -146,7 +144,7 @@ export default {
     ...mapGetters({ nonTravellers: "players/nonTravellers" }),
   },
   methods: {
-    selectRandomRoles() {
+    buildRoleSelection() {
       this.roleSelection = {};
       this.roles.forEach((role) => {
         if (!this.roleSelection[role.team]) {
@@ -156,18 +154,31 @@ export default {
         this.$set(role, "selected", 0);
       });
       delete this.roleSelection["traveller"];
-      const playerCount = Math.max(5, this.nonTravellers);
-      const composition = this.game[playerCount - 5];
-      Object.keys(composition).forEach((team) => {
-        for (let x = 0; x < composition[team]; x++) {
-          if (this.roleSelection[team]) {
-            const available = this.roleSelection[team].filter(
-              (role) => !role.selected,
-            );
-            if (available.length) {
-              randomElement(available).selected = 1;
-            }
-          }
+    },
+    shuffleRoles() {
+      this.roles.forEach((role) => {
+        this.$set(role, "selected", 0);
+      });
+
+      this.roleSelection = {};
+
+      this.roles.forEach((role) => {
+        if (!this.roleSelection[role.team]) {
+          this.$set(this.roleSelection, role.team, []);
+        }
+
+        this.roleSelection[role.team].push(role);
+      });
+
+      delete this.roleSelection["traveller"];
+
+      Object.keys(this.roleSelection).forEach((team) => {
+        const roles = this.roleSelection[team];
+
+        // Fisher-Yates shuffle
+        for (let i = roles.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [roles[i], roles[j]] = [roles[j], roles[i]];
         }
       });
     },
@@ -237,12 +248,12 @@ export default {
   },
   mounted: function () {
     if (!Object.keys(this.roleSelection).length) {
-      this.selectRandomRoles();
+      this.buildRoleSelection();
     }
   },
   watch: {
     roles() {
-      this.selectRandomRoles();
+      this.buildRoleSelection();
     },
   },
 };
@@ -255,7 +266,7 @@ ul.tokens {
   padding-left: 5%;
   li {
     border-radius: 50%;
-    width: 5vw;
+    width: max(5vw,100px);
     margin: 5px;
     filter: brightness(0.5);
     transition: all 250ms;
