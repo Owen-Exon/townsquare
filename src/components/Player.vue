@@ -495,7 +495,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../vars.scss";
+@use "../vars.scss" as *;
 
 .fold-enter-active,
 .fold-leave-active {
@@ -1074,7 +1074,7 @@ li.move:not(.from) .player .overlay svg.move {
 
   .text {
     line-height: 90%;
-    color: black;
+    color: white;
     font-size: 50%;
     font-weight: bold;
     text-align: center;
@@ -1084,10 +1084,10 @@ li.move:not(.from) .player .overlay svg.move {
     position: absolute;
     top: 15%;
     text-shadow:
-      0 1px 1px #f6dfbd,
-      0 -1px 1px #f6dfbd,
-      1px 0 1px #f6dfbd,
-      -1px 0 1px #f6dfbd;
+      0 1px 1px #000,
+      0 -1px 1px #000,
+      1px 0 1px #000,
+      -1px 0 1px #000;
   }
 
   .icon,

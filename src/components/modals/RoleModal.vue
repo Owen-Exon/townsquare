@@ -193,7 +193,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../../vars.scss";
+@use "../../vars.scss" as *;
 
 .modal {
   overflow-y: auto;

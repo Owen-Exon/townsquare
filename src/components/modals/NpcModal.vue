@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../../vars.scss";
+@use "../../vars.scss" as *;
 
 ul.tokens li {
   border-radius: 50%;

@@ -45,7 +45,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { version } from "../package.json";
+import packageJson from "../package.json";
 import TownSquare from "./components/TownSquare";
 import TownInfo from "./components/TownInfo";
 import Menu from "./components/Menu";
@@ -82,7 +82,7 @@ export default {
   },
   data() {
     return {
-      version,
+      version: packageJson.version,
     };
   },
   methods: {
@@ -157,7 +157,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "vars";
+@use "vars" as *;
+@use "media" as *;
 
 @font-face {
   font-family: "Papyrus";
@@ -192,8 +193,6 @@ body {
   margin: 0;
   overflow: hidden;
 }
-
-@import "media";
 
 * {
   box-sizing: border-box;
