@@ -89,10 +89,10 @@ export default {
     keyup({ key, ctrlKey, metaKey }) {
       if (ctrlKey || metaKey) return;
       switch (key.toLocaleLowerCase()) {
-        case "g":
+        case "t":
           this.$store.commit("toggleGrimoire");
           break;
-        case "a":
+        case "p":
           this.$refs.menu.addPlayer();
           break;
         case "h":
@@ -101,17 +101,17 @@ export default {
         case "j":
           this.$refs.menu.joinSession();
           break;
-        case "r":
+        case "c":
           this.$store.commit("toggleModal", "reference");
           break;
-        case "n":
+        case "o":
           this.$store.commit("toggleModal", "nightOrder");
           break;
         case "e":
           if (this.session.isSpectator) return;
           this.$store.commit("toggleModal", "edition");
           break;
-        case "c":
+        case "a":
           if (this.session.isSpectator) return;
           this.$store.commit("toggleModal", "roles");
           break;
@@ -120,22 +120,12 @@ export default {
             this.$store.commit("toggleModal", "voteHistory");
           }
           break;
-        case "s":
+        case "n":
           if (this.session.isSpectator) return;
           this.$refs.menu.toggleNight();
           break;
         case "escape":
           this.$store.commit("toggleModal");
-          break;
-        case "arrowup":
-          if (this.session.nomination) {
-            this.$refs.vote.vote(true);
-          }
-          break;
-        case "arrowdown":
-          if (this.session.nomination) {
-            this.$refs.vote.vote(false);
-          }
           break;
       }
     },
@@ -144,13 +134,25 @@ export default {
       if (
         !player ||
         (this.session.isSpectator && player.id !== this.session.playerId)
-      )
+      ) {
         return;
-      this.$store.commit("players/update", {
-        player,
-        property: "handRaised",
-        value: !player.handRaised,
-      });
+      }
+      
+      if (this.session.nomination) {
+        const currentVote = this.$refs.vote.currentVote | 0
+        console.log(currentVote)
+        this.$refs.vote.vote(
+          player.hasTwoVotes
+          ? currentVote == 0 ? 1 : currentVote == 1 ? 2 : 0
+          : currentVote == 0 ? 1 : 0 
+        );
+      } else {
+        this.$store.commit("players/update", {
+          player,
+          property: "handRaised",
+          value: !player.handRaised,
+        });
+      }
     },
   },
 };

@@ -1,15 +1,12 @@
 <template>
   <div id="vote">
     <div class="arrows">
+      <span class="nomineePoint" :style="nomineePointStyle"></span>
       <span class="nominee" :style="nomineeStyle"></span>
       <span class="nominator" :style="nominatorStyle"></span>
     </div>
     <div class="overlay">
       <audio src="../assets/sounds/countdown.mp3" preload="auto"></audio>
-      <em class="blue">{{ nominator.name }}</em> nominated
-      <em>{{ nominee.name }}</em
-      >!
-      <br />
       <template
         v-if="
           !session.isSpectator ||
@@ -163,6 +160,14 @@ export default {
         transitionDuration: this.session.votingSpeed - 100 + "ms",
       };
     },
+    nomineePointStyle: function () {
+      const players = this.players.length;
+      const nomination = this.session.nomination[1];
+      return {
+        transform: `rotate(${Math.round((nomination / players) * 360)}deg)`,
+        transitionDuration: this.session.votingSpeed - 100 + "ms",
+      };
+    },
     nominee: function () {
       return this.players[this.session.nomination[1]];
     },
@@ -299,6 +304,7 @@ export default {
 @use "../vars.scss" as *;
 
 #vote {
+  pointer-events: none;
   position: absolute;
   width: 20%;
   z-index: 20;
@@ -314,6 +320,10 @@ export default {
     0 -1px 2px #000000,
     1px 0 2px #000000,
     -1px 0 2px #000000;
+
+  * {
+    pointer-events: auto;
+  }
 
   .mark .button {
     font-size: 75%;
@@ -346,6 +356,14 @@ export default {
       stroke-width: 30px;
       stroke: white;
     }
+  }
+
+  .overlay {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    border: 3px solid black;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
   }
 }
 
@@ -401,6 +419,10 @@ export default {
   .nominee:before {
     background-image: url("../assets/clock-big.webp");
     animation: arrow-cw 1s ease-out;
+  }
+  .nomineePoint:before {
+    background-image: url("../assets/clock-mid.webp");
+    animation: arrow-ccw 1s ease-out;
   }
 }
 

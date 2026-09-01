@@ -47,12 +47,12 @@
           <li @click="toggleGrimoire" v-if="players.length">
             <template v-if="!grimoire.isPublic">Hide</template>
             <template v-if="grimoire.isPublic">Show</template>
-            <em>[G]</em>
+            <em>[T]</em>
           </li>
           <li @click="toggleNight" v-if="!session.isSpectator">
             <template v-if="!grimoire.isNight">Switch to Night</template>
             <template v-if="grimoire.isNight">Switch to Day</template>
-            <em>[S]</em>
+            <em>[N]</em>
           </li>
           <li
             @click="toggleNightOrder"
@@ -190,7 +190,7 @@
         <template v-if="tab === 'players' && !session.isSpectator">
           <!-- Users -->
           <li class="headline">Players</li>
-          <li @click="addPlayer" v-if="players.length < 20">Add<em>[A]</em></li>
+          <li @click="addPlayer" v-if="players.length < 20">Add<em>[P]</em></li>
           <li v-if="!session.isSpectator" @click="toggleSelfNaming">
             Allow Self-Naming
             <em
@@ -227,7 +227,7 @@
             v-if="!session.isSpectator && players.length > 4"
           >
             Choose & Assign
-            <em>[C]</em>
+            <em>[A]</em>
           </li>
           <li v-if="!session.isSpectator" @click="toggleModal('npc')">
             Add NPCs
@@ -244,11 +244,11 @@
           <li class="headline">Help</li>
           <li @click="toggleModal('reference')">
             Reference Sheet
-            <em>[R]</em>
+            <em>[C]</em>
           </li>
           <li @click="toggleModal('nightOrder')">
             Night Order Sheet
-            <em>[N]</em>
+            <em>[O]</em>
           </li>
           <li @click="toggleModal('gameState')">
             Game State JSON

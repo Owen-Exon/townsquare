@@ -479,7 +479,8 @@ export default {
     }
   }
   ul {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
     align-items: center;
     justify-content: center;
     li {

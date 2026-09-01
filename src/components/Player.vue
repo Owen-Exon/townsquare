@@ -613,7 +613,7 @@ export default {
         top: 0;
         width: 100%;
         background: url("../assets/vote.webp") center center no-repeat;
-        background-size: 50%;
+        background-size: 70%;
         height: 100%;
         pointer-events: none;
       }
@@ -749,6 +749,7 @@ export default {
 
 #townsquare.vote .player.two-votes .overlay svg.first-vote.fa-hand-paper {
   right: 50%;
+  transform: scale(-1, 1) !important;
 }
 
 #townsquare.vote .player.two-votes .overlay svg.second-vote.fa-hand-paper {
