@@ -39,6 +39,7 @@
     <VoteHistoryModal />
     <GameStateModal />
     <Gradients />
+    <img src="./assets/community-created-content.webp" alt="" class="ccc" />
     <span id="version">v{{ version }}</span>
   </div>
 </template>
@@ -249,9 +250,17 @@ ul {
   position: absolute;
   text-align: right;
   right: 10px;
-  bottom: 10px;
+  bottom: 60px;
   font-size: 60%;
   opacity: 0.5;
+}
+
+.ccc {
+  position: absolute;
+  text-align: right;
+  right: 10px;
+  bottom: 10px;
+  width: 120px;
 }
 
 .blur-enter-active,
@@ -400,6 +409,6 @@ video#background {
 }
 
 #app.night > .backdrop {
-  opacity: 0.5;
+  opacity: 0.7;
 }
 </style>

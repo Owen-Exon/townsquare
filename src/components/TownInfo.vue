@@ -58,10 +58,6 @@
         />
       </span>
     </li>
-    <li v-if="grimoire.isNight">
-      Night phase
-      <font-awesome-icon :icon="['fas', 'cloud-moon']" />
-    </li>
   </ul>
 </template>
 
@@ -99,8 +95,7 @@ export default {
   position: absolute;
   display: flex;
   width: 20%;
-  height: 20%;
-  padding: 50px 0 0;
+  height: 30%;
   align-items: center;
   align-content: center;
   justify-content: center;

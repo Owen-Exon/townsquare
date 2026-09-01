@@ -12,22 +12,13 @@
       session by pressing <b>[J]</b>.<br />
       <div class="footer">
         This project is free and open source and can be found on
-        <a href="https://github.com/nicholas-eden/townsquare" target="_blank"
+        <a href="https://github.com/Owen-Exon/townsquare" target="_blank"
           >GitHub</a
         >. It is not affiliated with The Pandemonium Institute. "Blood on the
         Clocktower" is a trademark of Steven Medway and The Pandemonium
         Institute.
       </div>
     </div>
-    <img src="../assets/community-created-content.webp" alt="" class="ccc" />
-    <a
-      class="redirect"
-      v-if="language === 'zh-CN'"
-      href="https://clocktower.gstonegames.com"
-    >
-      <img src="../assets/gstone.webp" class="gstone" alt="" />
-      你想使用中文版魔典吗？
-    </a>
   </div>
 </template>
 
