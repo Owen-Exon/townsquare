@@ -1,24 +1,18 @@
 <template>
   <ul class="info">
-    <li
-      class="edition"
-      :class="['edition-' + edition.id]"
-      :style="{
-        backgroundImage: `url(${
-          edition.logo && grimoire.isImageOptIn
-            ? edition.logo
-            : require('../assets/editions/' + edition.id + '.webp')
-        })`,
-      }"
-    ></li>
+
     <li v-if="players.length - teams.traveller < 5">
       Please add more players!
     </li>
     <li>
-      <span class="meta" v-if="!(edition.isOfficial || edition.hideTitle)">
+       <span class="meta" v-if="!(edition.hideTitle)">
         {{ edition.name }}
+      </span>
+      <span class="author" v-if="!(edition.hideTitle) && edition.author">
         {{ edition.author ? "by " + edition.author : "" }}
       </span>
+    </li>
+    <li>
       <span>
         {{ players.length }} <font-awesome-icon class="players" icon="users" />
       </span>
@@ -63,10 +57,10 @@
           :icon="teams.traveller > 1 ? 'user-friends' : 'user'"
         />
       </span>
-      <span v-if="grimoire.isNight">
-        Night phase
-        <font-awesome-icon :icon="['fas', 'cloud-moon']" />
-      </span>
+    </li>
+    <li v-if="grimoire.isNight">
+      Night phase
+      <font-awesome-icon :icon="['fas', 'cloud-moon']" />
     </li>
   </ul>
 </template>
@@ -138,8 +132,18 @@ export default {
     .meta {
       text-align: center;
       flex-basis: 100%;
-      font-family: PiratesBay, sans-serif;
+      font-family: LHF, sans-serif;
       font-weight: normal;
+      font-size:2em;
+      letter-spacing: 0mm;
+      word-spacing:-3mm;
+      margin:0;
+      margin-bottom:-0.2em;
+    }
+
+    .author {
+      font-family: Dumbledor;
+      font-size:1.1em
     }
 
     svg {

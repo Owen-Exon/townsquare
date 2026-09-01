@@ -163,15 +163,15 @@ export default {
 @use "media" as *;
 
 @font-face {
-  font-family: "Papyrus";
-  src: url("assets/fonts/papyrus.eot"); /* IE9*/
-  src:
-    url("assets/fonts/papyrus.eot?#iefix") format("embedded-opentype"),
-    /* IE6-IE8 */ url("assets/fonts/papyrus.woff2") format("woff2"),
-    /* chrome firefox */ url("assets/fonts/papyrus.woff") format("woff"),
-    /* chrome firefox */ url("assets/fonts/papyrus.ttf") format("truetype"),
-    /* chrome firefox opera Safari, Android, iOS 4.2+*/
-      url("assets/fonts/papyrus.svg#PapyrusW01") format("svg"); /* iOS 4.1- */
+  font-family: Dumbledor;
+  src: url("assets/fonts/Dumbledor.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: LHF;
+  src: url("assets/fonts/LHF_Unlovable.ttf");
+  font-display: swap;
 }
 
 @font-face {

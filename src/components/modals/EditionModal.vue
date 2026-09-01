@@ -49,24 +49,7 @@
         >the documentation</a
       >
       on how to write a custom character JSON object.
-      <b>Only load JSON files from sources that you trust!</b>
-      <h3>Some popular custom scripts:</h3>
-      <ul class="scripts">
-        <li
-          v-for="(script, index) in customs.teensyville"
-          :key="index"
-          @click="parseRoles(script)"
-        >
-          {{ script[0].name + " by " + script[0].author + " (Teensyville)" }}
-        </li>
-        <li
-          v-for="(script, index) in customs.standard"
-          :key="index + customs.teensyville.length"
-          @click="parseRoles(script)"
-        >
-          {{ script[0].name + " by " + script[0].author }}
-        </li>
-      </ul>
+      <br />
       <input
         type="file"
         ref="upload"
@@ -202,9 +185,9 @@ ul.editions .edition {
   text-align: center;
   padding-top: 20%;
   background-position: center center;
-  background-size: 80% auto;
+  background-size: contain;
   background-repeat: no-repeat;
-  width: 45%;
+  width: 30%;
   margin: 5px;
   font-size: 120%;
   text-shadow:

@@ -111,15 +111,16 @@ export default {
 
   .icon,
   &:before {
+    filter: drop-shadow(0 0 min(1vh,1vw) #000);
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center 30%;
     position: absolute;
     width: 100%;
     height: 100%;
-    margin-bottom: 9%;
+    margin-bottom: 13%;
   }
-
+  
   span {
     position: absolute;
     width: 100%;
@@ -171,16 +172,18 @@ export default {
   .name {
     width: 100%;
     height: 100%;
-    font-size: 24px; // svg fonts are relative to document font size
+    font-size: 20px; // svg fonts are relative to document font size
     .label {
-      fill: black;
-      stroke: white;
+      dominant-baseline: middle;
+      fill: #000;
+      stroke: #ffffff80;
       stroke-width: 2px;
       paint-order: stroke;
-      font-family: "Papyrus", serif;
-      font-weight: bold;
+      font-family: Dumbledor, serif;
+      text-transform:uppercase;
       text-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
       letter-spacing: 1px;
+      font-weight:400;
 
       @-moz-document url-prefix() {
         &.mozilla {
