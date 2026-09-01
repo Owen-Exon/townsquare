@@ -120,6 +120,10 @@
                 :icon="['fas', grimoire.isMuted ? 'volume-mute' : 'volume-up']"
             /></em>
           </li>
+          <li @click="clearAllData">
+            Clear All Data
+            <em><font-awesome-icon icon="trash-alt" /></em>
+          </li>
         </template>
 
         <template v-if="tab === 'session'">
@@ -413,6 +417,11 @@ export default {
         }
         this.$store.commit("players/clear");
         this.$store.commit("setBluff");
+      }
+    },
+    clearAllData() {
+      if (confirm("Are you sure you want to remove all Saved Data")) {
+        this.$store.dispatch("session/clearAllData");
       }
     },
     clearRoles() {

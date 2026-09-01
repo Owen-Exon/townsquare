@@ -37,7 +37,12 @@ const state = () => ({
 
 const getters = {};
 
-const actions = {};
+const actions = {
+  clearAllData() {
+    localStorage.clear();
+    window.location.reload();
+  },
+}
 
 // mutations helper functions
 const set = (key) => (state, val) => {
